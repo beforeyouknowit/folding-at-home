@@ -1,8 +1,11 @@
 FROM debian:stable-slim
-LABEL maintainer="john.k.tims@gmail.com"
+LABEL maintainer="beforeyouknowit@gmail.com"
 
 ENV FAH_VERSION_MINOR=7.5.1
 ENV FAH_VERSION_MAJOR=7.5
+ENV FAH_TEAMID=
+ENV FAH_USERNAME=
+ENV FAH_PASSKEY=
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -16,6 +19,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
         curl -o /tmp/fah.deb https://download.foldingathome.org/releases/public/release/fahclient/debian-stable-64bit/v${FAH_VERSION_MAJOR}/fahclient_${FAH_VERSION_MINOR}_amd64.deb &&\
         mkdir -p /etc/fahclient/ &&\
         touch /etc/fahclient/config.xml &&\
+	echo "--team=${FAH_TEAMID}" >> /etc/fahclient/config.xml &&\
+	echo "--user=${FAH_USERNAME}" >> /etc/fahclient/config.xml &&\
+	echo "--passkey=${FAH_PASSKEY}" >> /etc/fahclient/config.xml &&\
         dpkg --install /tmp/fah.deb &&\
         apt-get remove -y curl &&\
         apt-get autoremove -y &&\
@@ -29,4 +35,4 @@ USER folder
 WORKDIR /home/folder
 
 ENTRYPOINT ["FAHClient", "--web-allow=0/0:7396", "--allow=0/0:7396"]
-CMD ["--user=Anonymous", "--team=0", "--gpu=false", "--smp=true", "--power=full"]
+CMD ["--user=Anonymous", "--team=0", "--gpu=false", "--smp=true", "--power=medium"]
